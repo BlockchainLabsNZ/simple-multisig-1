@@ -1,12 +1,13 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.18;
+
 
 // This contract is only used for testing purposes.
 contract TestRegistry {
+    mapping(address => uint) public registry;
 
-  mapping(address => uint) public registry;
+    event Logger(string s);
 
-  function register(uint x) public payable {
-    registry[msg.sender] = x;
-  }
-
+    function register(uint x) public payable {
+        registry[msg.sender] = x;
+    }
 }

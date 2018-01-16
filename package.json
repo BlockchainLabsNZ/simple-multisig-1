@@ -7,16 +7,14 @@
     "test": "test"
   },
   "scripts": {
-    "test": "truffle test"
+    "test": "truffle test",
+    "coverage": "./node_modules/.bin/solidity-coverage"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/christianlundkvist/simple-multisig.git"
   },
-  "keywords": [
-    "Ethereum",
-    "Wallet"
-  ],
+  "keywords": ["Ethereum", "Wallet"],
   "author": "christian.lundkvist@gmail.com",
   "license": "MIT",
   "bugs": {
@@ -24,9 +22,10 @@
   },
   "homepage": "https://github.com/christianlundkvist/simple-multisig#readme",
   "devDependencies": {
-    "eth-lightwallet": "*",
     "bluebird": "*",
+    "eth-lightwallet": "*",
     "left-pad": "*",
+    "solidity-coverage": "^0.4.8",
     "solidity-sha3": "*"
   }
 }

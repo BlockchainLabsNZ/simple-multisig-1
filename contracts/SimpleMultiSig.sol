@@ -1,15 +1,11 @@
 pragma solidity ^0.4.18;
 
 
-import "./Ownable.sol";
-
-
 contract SimpleMultiSig {
-
-    uint public nonce;                  // (only) mutable state
-    uint public threshold;              // immutable state
-    mapping (address => bool) public isOwner;  // immutable state
-    address[] public ownersArr;         // immutable state
+    uint public nonce;          // (only) mutable state
+    uint public threshold;      // immutable state
+    mapping (address => bool) public isOwner; // immutable state
+    address[] public ownersArr;        // immutable state
 
     function SimpleMultiSig(uint threshold_, address[] owners_) public {
         require(owners_.length <= 10 && threshold_ <= owners_.length && threshold_ != 0);
@@ -27,7 +23,14 @@ contract SimpleMultiSig {
     function () public payable {}
 
     // Note that address recovered from signatures must be strictly increasing
-    function execute(uint8[] sigV, bytes32[] sigR, bytes32[] sigS, address destination, uint value, bytes data) public {
+    function execute(
+        uint8[] sigV,
+        bytes32[] sigR,
+        bytes32[] sigS,
+        address destination,
+        uint value,
+        bytes data)
+    public {
         require(sigR.length == threshold);
         require(sigR.length == sigS.length && sigR.length == sigV.length);
 
@@ -44,37 +47,5 @@ contract SimpleMultiSig {
         // If we make it here all signatures are accounted for
         nonce = nonce + 1;
         require(destination.call.value(value)(data));
-    }
-}
-
-
-contract SimpleMultiSigFactory is Ownable {
-
-    function createSimpleMultiSig(
-        uint _threshold,
-        address[] _owners
-    )
-    public
-    onlyOwner()
-    returns (SimpleMultiSig) {
-
-        // this bit sorts the owner addresses
-        // sadly I cannot make this into a function since I cannot return a dynamically sized array
-        // I'm using bubble sort at the moment since the array is <= 10 addresses so (hopefully) is not a big deal
-        address temp;
-        for (uint i = 0; i < _owners.length - 1; i++) {
-            for (uint j = 0; j < _owners.length - i - 1; j++) {
-                if (_owners[j] > _owners[j+1]) {
-                    temp = _owners[j];
-                    _owners[j] = _owners[j+1];
-                    _owners[j+1] = temp;
-                }
-            }
-        }
-        SimpleMultiSig newMultiSig = new SimpleMultiSig(
-            _threshold,
-            _owners
-        );
-        return newMultiSig;
     }
 }
